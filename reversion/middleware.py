@@ -1,9 +1,11 @@
 import sys
+from django.utils.deprecation import MiddlewareMixin
+
 from reversion.revisions import create_revision as create_revision_base
 from reversion.views import _request_creates_revision, _set_user_from_request, create_revision
 
 
-class RevisionMiddleware(object):
+class RevisionMiddleware(MiddlewareMixin):
 
     """Wraps the entire request in a revision."""
 
@@ -36,6 +38,3 @@ class RevisionMiddleware(object):
 
     def process_exception(self, request, exception):
         self._close_revision(request, True)
-
-    def __call__(self, request):
-        return self.get_response(request)
